@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>App Idea Sketcher</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+<style>
+  :root {
+    color-scheme: light;
+    --bg: #faf8f3;
+    --bg-soft: #f1ede3;
+    --surface: #ffffff;
+    --surface-raised: #ffffff48;
+    --border: #e4ded0;
+    --border-soft: #ece7da;
+    --text: #1c2233;
+    --text-muted: #5c6478;
+    --text-faint: #8790a3;
+    --amber: #c97a12;
+    --amber-ink: #7a4a08;
+    --amber-soft: rgba(201, 122, 18, 0.11);
+    --amber-border: rgba(201, 122, 18, 0.32);
+    --sky: #0f86ab;
+    --sky-ink: #0a5a73;
+    --sky-soft: rgba(15, 134, 171, 0.10);
+    --sky-border: rgba(15, 134, 171, 0.32);
+    --sky-bright: #4cc3f0;
+    --title-mid: #e2a53d;
+    --font-display: "Instrument Serif", Georgia, "Times New Roman", serif;
+    --font-body: "Space Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+
+  html, body {
+    background: var(--bg);
+    color: var(--text);
+  }
+
+  body {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.55;
+    padding: 0 20px;
+    background:
+      radial-gradient(ellipse 900px 500px at 15% -10%, rgba(76, 195, 240, 0.08), transparent 60%),
+      radial-gradient(ellipse 800px 500px at 100% 0%, rgba(245, 167, 41, 0.07), transparent 55%),
+      var(--bg);
+  }
+
+  .wrap {
+    max-width: 720px;
+    margin: 0 auto;
+    padding-block: 48px 64px;
+  }
+
+  header.hero {
+    margin-bottom: 32px;
+  }
+
+  .eyebrow {
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--sky);
+    font-weight: 600;
+    margin: 0 0 10px;
+  }
+
+  h1.title {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(2.1rem, 6vw, 3rem);
+    line-height: 1.08;
+    margin: 0 0 12px;
+    background: linear-gradient(100deg, var(--amber) 0%, var(--title-mid) 45%, var(--sky) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-wrap: balance;
+  }
+
+  .subtitle {
+    color: var(--text-muted);
+    font-size: 1.02rem;
+    max-width: 52ch;
+    margin: 0;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 26px;
+  }
+
+  .form-card { margin-bottom: 22px; }
+
+  label {
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+
+  .field { margin-bottom: 18px; }
+
+  textarea, select {
+    width: 100%;
+    font-family: var(--font-body);
+    font-size: 0.98rem;
+    color: var(--text);
+    background: var(--bg-soft);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 14px;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 92px;
+    line-height: 1.5;
+  }
+
+  textarea:focus, select:focus {
+    outline: none;
+    border-color: var(--sky);
+    box-shadow: 0 0 0 3px var(--sky-soft);
+  }
+
+  select {
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: linear-gradient(45deg, transparent 50%, var(--text-muted) 50%), linear-gradient(135deg, var(--text-muted) 50%, transparent 50%);
+    background-position: calc(100% - 18px) center, calc(100% - 13px) center;
+    background-size: 5px 5px, 5px 5px;
+    background-repeat: no-repeat;
+    padding-right: 36px;
+  }
+
+  .row-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .char-count {
+    display: block;
+    text-align: right;
+    font-size: 0.72rem;
+    color: var(--text-faint);
+    margin-top: 6px;
+  }
+
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 10px 0 0;
+  }
+
+  .chip {
+    font-family: var(--font-body);
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    background: var(--bg-soft);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 6px 12px;
+    cursor: pointer;
+    transition: border-color 0.15s ease, color 0.15s ease;
+  }
+
+  .chip:hover { border-color: var(--sky-border); color: var(--text); }
+
+  button.submit {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 0.96rem;
+    color: #04121a;
+    background: linear-gradient(100deg, var(--sky-bright), #a4e3fb);
+    border: none;
+    border-radius: 10px;
+    padding: 13px 22px;
+    cursor: pointer;
+    transition: transform 0.1s ease, box-shadow 0.15s ease;
+    width: 100%;
+    justify-content: center;
+    margin-top: 4px;
+  }
+
+  button.submit:hover:not(:disabled) { box-shadow: 0 6px 20px rgba(76, 195, 240, 0.25); }
+  button.submit:active:not(:disabled) { transform: translateY(1px); }
+  button.submit:disabled { opacity: 0.55; cursor: default; }
+
+  .spinner {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    border: 2px solid rgba(4, 18, 26, 0.35);
+    border-top-color: #04121a;
+    animation: spin 0.8s linear infinite;
+    flex: none;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .status {
+    font-size: 0.88rem;
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 22px;
+    line-height: 1.5;
+  }
+  .status.warn {
+    background: var(--amber-soft);
+    border: 1px solid var(--amber-border);
+    color: var(--amber-ink);
+  }
+  .status.error {
+    background: var(--amber-soft);
+    border: 1px solid var(--amber-border);
+    color: var(--amber-ink);
+  }
+
+  #result {
+    animation: rise 0.35s ease both;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    #result { animation: none; }
+  }
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .result-tag {
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--amber);
+    margin-bottom: 10px;
+  }
+
+  h2.app-name {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(1.8rem, 5vw, 2.4rem);
+    margin: 0 0 8px;
+    color: var(--text);
+    text-wrap: balance;
+  }
+
+  .pitch {
+    color: var(--text-muted);
+    font-size: 1.02rem;
+    margin: 0 0 28px;
+    max-width: 58ch;
+  }
+
+  .section { margin-bottom: 26px; }
+  .section:last-child { margin-bottom: 0; }
+
+  .section-title {
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--text-faint);
+    margin: 0 0 14px;
+  }
+
+  ol.screens {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  ol.screens li {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+
+  .screen-num {
+    flex: none;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--sky-soft);
+    border: 1px solid var(--sky-border);
+    color: var(--sky);
+    font-size: 0.8rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-body);
+  }
+
+  ol.screens strong {
+    display: block;
+    font-size: 0.98rem;
+    color: var(--text);
+    margin-bottom: 2px;
+  }
+
+  ol.screens p {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 0.92rem;
+  }
+
+  ul.remember {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border: 1px solid var(--border-soft);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  ul.remember li {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    padding: 11px 14px;
+    border-bottom: 1px solid var(--border-soft);
+    font-size: 0.92rem;
+  }
+
+  ul.remember li:last-child { border-bottom: none; }
+  ul.remember li:nth-child(odd) { background: var(--bg-soft); }
+
+  ul.remember .item { color: var(--text); font-weight: 500; }
+  ul.remember .example { color: var(--text-muted); font-style: italic; }
+
+  .build-order {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .check-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+  }
+
+  .check-list li {
+    font-size: 0.9rem;
+    color: var(--text);
+    padding-left: 22px;
+    position: relative;
+  }
+
+  .check-list.first li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 6px;
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+    background: var(--sky);
+  }
+
+  .check-list.later li::before {
+    content: "";
+    position: absolute;
+    left: 2px;
+    top: 8px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    border: 1px solid var(--text-faint);
+  }
+  .check-list.later li { color: var(--text-muted); }
+
+  ul.watch-outs {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  ul.watch-outs li {
+    background: var(--amber-soft);
+    border: 1px solid var(--amber-border);
+    border-radius: 10px;
+    padding: 11px 14px;
+    font-size: 0.9rem;
+    color: var(--amber-ink);
+  }
+
+  .bp-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+  .bp-header .section-title { margin: 0; }
+
+  button.copy-btn {
+    font-family: var(--font-body);
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--sky);
+    background: var(--sky-soft);
+    border: 1px solid var(--sky-border);
+    border-radius: 8px;
+    padding: 6px 12px;
+    cursor: pointer;
+    transition: background 0.15s ease;
+  }
+  button.copy-btn:hover { background: rgba(76, 195, 240, 0.22); }
+  button.copy-btn.copied { color: var(--amber); background: var(--amber-soft); border-color: var(--amber-border); }
+
+  pre.build-prompt {
+    margin: 0;
+    background: var(--bg-soft);
+    border: 1px solid var(--border-soft);
+    border-radius: 12px;
+    padding: 16px;
+    font-family: var(--font-body);
+    font-size: 0.88rem;
+    color: var(--text);
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    line-height: 1.6;
+  }
+
+  footer.note {
+    margin-top: 30px;
+    font-size: 0.78rem;
+    color: var(--text-faint);
+    line-height: 1.6;
+    max-width: 60ch;
+  }
+
+  @media (max-width: 560px) {
+    .row-2, .build-order { grid-template-columns: 1fr; }
+    ul.remember li { grid-template-columns: 1fr; gap: 3px; }
+    ul.remember .example { color: var(--text-faint); }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <p class="eyebrow">App Idea Sketcher</p>
+    <h1 class="title">Turn your idea into a plan</h1>
+    <p class="subtitle">Describe an app idea in your own words. Get back a plain-English, one-page plan: screens, what to remember, what to build first, and a prompt to hand to any AI app builder.</p>
+  </header>
+
+  <form class="card form-card" id="sketchForm">
+    <div class="field">
+      <label for="idea">Your app idea, in your own words</label>
+      <textarea id="idea" maxlength="400" placeholder="e.g. A chore tracker for my kids, where they check off chores and earn points toward a reward." required></textarea>
+      <span class="char-count"><span id="charCount">0</span>/400</span>
+      <div class="chips">
+        <button type="button" class="chip" data-idea="A chore tracker for my kids, where they check off chores and earn points toward a reward.">Chore tracker for kids</button>
+        <button type="button" class="chip" data-idea="A sign-up sheet for time slots at my farm stand, so customers can reserve a pickup window.">Farm stand sign-up sheet</button>
+        <button type="button" class="chip" data-idea="A simple log where I write down which cows got which medicine and when, so I don't lose track.">Herd treatment log</button>
+      </div>
+    </div>
+
+    <div class="row-2">
+      <div class="field">
+        <label for="audience">Who will use it</label>
+        <select id="audience">
+          <option>My kids</option>
+          <option>My family</option>
+          <option>Friends</option>
+          <option>Customers or clients</option>
+          <option>My team or coworkers</option>
+          <option>Just me</option>
+          <option>The general public</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="platform">Where it should run</label>
+        <select id="platform">
+          <option>On a phone</option>
+          <option>On a tablet</option>
+          <option>In a web browser</option>
+          <option>On a desktop computer</option>
+          <option>On a shared screen or kiosk</option>
+        </select>
+      </div>
+    </div>
+
+    <button type="submit" class="submit" id="submitBtn">
+      <span id="submitLabel">Sketch my app</span>
+    </button>
+  </form>
+
+  <div class="status" id="status" hidden></div>
+
+  <section class="card" id="result" hidden></section>
+
+  <footer class="note">
+    This sketch is a starting point, not professional advice. It's written to avoid invented statistics, real people's names, and legal, medical, or financial guidance &mdash; if your idea touches any of those, add your own judgment or check with a licensed professional before you build.
+  </footer>
+
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var ideaInput = document.getElementById('idea');
+  var audienceInput = document.getElementById('audience');
+  var platformInput = document.getElementById('platform');
+  var form = document.getElementById('sketchForm');
+  var submitBtn = document.getElementById('submitBtn');
+  var submitLabel = document.getElementById('submitLabel');
+  var statusEl = document.getElementById('status');
+  var resultEl = document.getElementById('result');
+  var charCount = document.getElementById('charCount');
+
+  var sampleFn = null;
+  var sampleChecked = false;
+  var currentController = null;
+  var loadingTimer = null;
+
+  var LOADING_MESSAGES = [
+    'Reading your idea…',
+    'Sketching the screens…',
+    'Working out what to remember…',
+    'Writing the build prompt…'
+  ];
+
+  ideaInput.addEventListener('input', function () {
+    charCount.textContent = String(ideaInput.value.length);
+  });
+
+  document.querySelectorAll('.chip').forEach(function (chip) {
+    chip.addEventListener('click', function () {
+      ideaInput.value = chip.getAttribute('data-idea');
+      charCount.textContent = String(ideaInput.value.length);
+      ideaInput.focus();
+    });
+  });
+
+  function initSample() {
+    try {
+      if (window.claude && typeof window.claude.use === 'function') {
+        window.claude.use('sample').then(function (fn) {
+          sampleFn = fn;
+          sampleChecked = true;
+        }).catch(function () {
+          sampleFn = null;
+          sampleChecked = true;
+        });
+        return;
+      }
+    } catch (e) {}
+    sampleChecked = true;
+  }
+  initSample();
+
+  function escapeHtml(str) {
+    return String(str == null ? '' : str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function showStatus(kind, message) {
+    statusEl.className = 'status ' + kind;
+    statusEl.textContent = message;
+    statusEl.hidden = false;
+  }
+
+  function clearStatus() {
+    statusEl.hidden = true;
+    statusEl.textContent = '';
+  }
+
+  function setLoading(isLoading) {
+    submitBtn.disabled = isLoading;
+    if (isLoading) {
+      var i = 0;
+      submitLabel.innerHTML = '<span class="spinner"></span>' + LOADING_MESSAGES[0];
+      loadingTimer = setInterval(function () {
+        i = (i + 1) % LOADING_MESSAGES.length;
+        submitLabel.innerHTML = '<span class="spinner"></span>' + LOADING_MESSAGES[i];
+      }, 1500);
+    } else {
+      clearInterval(loadingTimer);
+      submitLabel.textContent = 'Sketch my app';
+    }
+  }
+
+  function buildPrompt(idea, audience, platform) {
+    return [
+      'You turn a plain-English app idea into a simple one-page plan for someone with no coding background.',
+      'Write everything at a 5th-grade reading level: short sentences, everyday words, no jargon.',
+      '',
+      'Hard rules, follow exactly:',
+      '- Never invent statistics, numbers, percentages, or research findings, and never state anything as a fact unless it is a well-known, uncontroversial general fact.',
+      '- Never name or refer to any real, identifiable person, including celebrities or public figures, even as an example. Use generic roles instead, like "a parent" or "a customer".',
+      '- Never give legal, medical, or financial advice. If the idea touches health, money, or legal matters, keep the plan focused on organizing information and reminders, and add a watch-out telling the person to check with a licensed professional for anything legal, medical, or financial.',
+      '- Keep every screen and step realistic for one person to build with an AI app builder; nothing that needs a large team or a large budget.',
+      '',
+      'The app idea, in the person\'s own words:',
+      '"""',
+      idea,
+      '"""',
+      '',
+      'Who will use this app: ' + audience,
+      'Where it should run: ' + platform,
+      '',
+      'Respond with ONLY valid JSON (no markdown fences, no extra text) matching exactly this shape:',
+      '{',
+      '  "appName": "short catchy name, 2-4 words",',
+      '  "pitch": "one plain sentence describing what the app does and who it is for",',
+      '  "screens": [ { "name": "short screen name", "description": "one plain sentence on what the person sees and does here" } ],',
+      '  "remember": [ { "item": "a piece of information the app stores", "example": "a realistic example value" } ],',
+      '  "buildFirst": ["short phrase", "short phrase"],',
+      '  "buildLater": ["short phrase", "short phrase"],',
+      '  "watchOuts": ["one plain sentence naming something to watch out for"],',
+      '  "buildPrompt": "a 3-6 sentence prompt the person could paste into any AI app builder to start building this app, mentioning the screens, what it should remember, and where it runs"',
+      '}',
+      '',
+      'JSON rules: "screens" has 2 to 4 items in the order the person moves through them. "remember" has 3 to 6 items. "buildFirst" has 2 to 4 items. "buildLater" has 2 to 4 items. "watchOuts" has 2 to 3 items. Include no keys other than the ones shown above.'
+    ].join('\n');
+  }
+
+  function validateShape(data) {
+    if (!data || typeof data !== 'object') throw new Error('bad_shape');
+    var arrays = ['screens', 'remember', 'buildFirst', 'buildLater', 'watchOuts'];
+    for (var i = 0; i < arrays.length; i++) {
+      if (!Array.isArray(data[arrays[i]]) || data[arrays[i]].length === 0) throw new Error('bad_shape');
+    }
+    if (!data.appName || !data.pitch || !data.buildPrompt) throw new Error('bad_shape');
+  }
+
+  function errorMessage(err) {
+    var code = err && err.code;
+    if (code === 'not_granted') return 'This page needs permission to use Claude’s AI helper. Reload the page and allow it when asked, then try again.';
+    if (code === 'rate_limited') return 'Claude’s AI helper is busy right now. Wait a few seconds and try again.';
+    if (err && err.message === 'bad_shape') return 'The sketch came back in an unexpected shape. Try again, or shorten your idea a little.';
+    return 'Something went wrong sketching your app. Try again in a moment.';
+  }
+
+  function renderResult(data) {
+    var screensHtml = data.screens.map(function (s, i) {
+      return '<li><span class="screen-num">' + (i + 1) + '</span><div><strong>' + escapeHtml(s.name) + '</strong><p>' + escapeHtml(s.description) + '</p></div></li>';
+    }).join('');
+
+    var rememberHtml = data.remember.map(function (r) {
+      return '<li><span class="item">' + escapeHtml(r.item) + '</span><span class="example">' + escapeHtml(r.example) + '</span></li>';
+    }).join('');
+
+    var firstHtml = data.buildFirst.map(function (x) { return '<li>' + escapeHtml(x) + '</li>'; }).join('');
+    var laterHtml = data.buildLater.map(function (x) { return '<li>' + escapeHtml(x) + '</li>'; }).join('');
+    var watchHtml = data.watchOuts.map(function (x) { return '<li>' + escapeHtml(x) + '</li>'; }).join('');
+
+    resultEl.innerHTML =
+      '<div class="result-tag">Your sketch</div>' +
+      '<h2 class="app-name">' + escapeHtml(data.appName) + '</h2>' +
+      '<p class="pitch">' + escapeHtml(data.pitch) + '</p>' +
+      '<div class="section"><h3 class="section-title">Screens, in order</h3><ol class="screens">' + screensHtml + '</ol></div>' +
+      '<div class="section"><h3 class="section-title">What it needs to remember</h3><ul class="remember">' + rememberHtml + '</ul></div>' +
+      '<div class="section build-order">' +
+        '<div><h3 class="section-title">Build first</h3><ul class="check-list first">' + firstHtml + '</ul></div>' +
+        '<div><h3 class="section-title">Add later</h3><ul class="check-list later">' + laterHtml + '</ul></div>' +
+      '</div>' +
+      '<div class="section"><h3 class="section-title">Watch out for</h3><ul class="watch-outs">' + watchHtml + '</ul></div>' +
+      '<div class="section build-prompt-section">' +
+        '<div class="bp-header"><h3 class="section-title">Build prompt</h3><button type="button" class="copy-btn" id="copyBtn">Copy</button></div>' +
+        '<pre class="build-prompt" id="buildPromptText">' + escapeHtml(data.buildPrompt) + '</pre>' +
+      '</div>';
+
+    resultEl.hidden = false;
+    resultEl.style.animation = 'none';
+    resultEl.offsetHeight;
+    resultEl.style.animation = '';
+
+    document.getElementById('copyBtn').addEventListener('click', function () {
+      copyText(data.buildPrompt);
+    });
+  }
+
+  function copyText(text) {
+    var btn = document.getElementById('copyBtn');
+    function flash(label) {
+      var original = 'Copy';
+      btn.textContent = label;
+      btn.classList.add('copied');
+      setTimeout(function () {
+        btn.textContent = original;
+        btn.classList.remove('copied');
+      }, 1600);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () {
+        flash('Copied!');
+      }).catch(function () {
+        selectFallback(flash);
+      });
+    } else {
+      selectFallback(flash);
+    }
+  }
+
+  function selectFallback(flash) {
+    try {
+      var pre = document.getElementById('buildPromptText');
+      var range = document.createRange();
+      range.selectNodeContents(pre);
+      var sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+      flash('Selected – press Ctrl/Cmd+C');
+    } catch (e) {}
+  }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    clearStatus();
+
+    var idea = ideaInput.value.trim();
+    if (!idea) {
+      ideaInput.focus();
+      return;
+    }
+
+    if (!sampleFn) {
+      showStatus('warn', sampleChecked
+        ? 'This app’s AI helper only works when this page is opened as a Claude Artifact on claude.ai – it needs no API key there. Open it there to sketch your idea.'
+        : 'Still connecting to Claude’s AI helper – give it a second and try again.');
+      return;
+    }
+
+    if (currentController) currentController.abort();
+    currentController = new AbortController();
+
+    setLoading(true);
+    sampleFn.json(buildPrompt(idea, audienceInput.value, platformInput.value), {
+      signal: currentController.signal,
+      modelTier: 'default'
+    }).then(function (data) {
+      validateShape(data);
+      renderResult(data);
+      resultEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }).catch(function (err) {
+      if (err && err.code === 'cancelled') return;
+      showStatus('error', errorMessage(err));
+    }).finally(function () {
+      setLoading(false);
+    });
+  });
+})();
+</script>
+</body>
+</html>
